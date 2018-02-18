@@ -5,6 +5,8 @@ project(BroPluginDAG)
 
 include(BroPlugin)
 
+find_package(DAG REQUIRED)
+
 bro_plugin_begin(Endace DAG)
 bro_plugin_cc(src/Plugin.cc)
 bro_plugin_bif(src/dag.bif)
