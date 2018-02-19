@@ -140,7 +140,6 @@ void PktDagSrc::Close()
 	{
 	if ( fd >= 0 )
 		{
-		PktSrc::Close();
 		dag_stop_stream(fd, stream_num);
 		dag_detach_stream(fd, stream_num);
 		dag_close(fd);
