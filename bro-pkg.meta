@@ -1,0 +1,6 @@
+[package]
+description = Packet source plugin that provides native support for Endace DAG capture cards.
+tags = packet source, plugin, dag, endace
+plugin_dir = build
+build_command = ( ./configure --bro-dist=%(bro_dist)s && make )
+test_command = ( cd tests && btest -d )
