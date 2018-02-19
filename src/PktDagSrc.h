@@ -39,8 +39,6 @@ protected:
 	//virtual void GetFds(int* read, int* write, int* except);
 	virtual void Close();
 
-	void Error(const char* str);
-
 private:
 	static const unsigned int EXTRA_WINDOW_SIZE = 4 * 1024 * 1024;
 	int stream_num;
