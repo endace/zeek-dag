@@ -14,32 +14,36 @@
 #ifndef PKTDAGSRC_H
 #define PKTDAGSRC_H
 
-#ifdef USE_DAG
-
 extern int snaplen;
 
-#include "PktSrc.h"
+#include "iosource/PktSrc.h"
 
-class PktDagSrc : public PktSrc {
+namespace iosource {
+namespace pktsrc {
+
+class PktDagSrc : public iosource::PktSrc {
 public:
-	PktDagSrc(const char* interface, const char* filter,
-			PktSrc_Filter_Type ft = TYPE_FILTER_NORMAL);
+	PktDagSrc(const std::string& path, bool is_live);
 	virtual ~PktDagSrc();
+	static PktSrc* InstantiatePktDagSrc(const std::string& path, bool is_live);
 
 	// PktSrc interface:
 	virtual void Statistics(Stats* stats);
-	virtual int SetFilter(int index);
-	virtual int SetNewFilter(const char* filter);
+	virtual bool PrecompileFilter(int index, const std::string& filter);
+	virtual bool SetFilter(int index);
 
 protected:
-	virtual int ExtractNextPacket();
-	virtual void GetFds(int* read, int* write, int* except);
+	virtual void Open();
+	virtual bool ExtractNextPacket(Packet* pkt);
+	virtual void DoneWithPacket();
+	//virtual void GetFds(int* read, int* write, int* except);
 	virtual void Close();
 
 	void Error(const char* str);
 
+private:
 	static const unsigned int EXTRA_WINDOW_SIZE = 4 * 1024 * 1024;
-	static const int stream_num = 0;	// use receive stream 0
+	int stream_num;
 
 	// Unfortunaly the DAG API has some problems with locking streams,
 	// so we do our own checks to ensure we don't use more than one
@@ -47,8 +51,13 @@ protected:
 	static int mutex;
 
 	int fd;
-	bpf_program* current_filter;
+	int current_filter;
+
+	Properties props;
+	Stats stats;
 };
-#endif
+
+}
+}
 
 #endif
