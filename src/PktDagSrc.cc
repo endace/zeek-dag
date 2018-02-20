@@ -4,6 +4,7 @@
 
 extern "C" {
 #include <dagapi.h>
+#include <dagerf.h>
 #include <pcap.h>
 }
 #include <errno.h>
@@ -17,6 +18,10 @@ using namespace iosource::pktsrc;
 
 // Length of ERF Header before Ethernet header.
 #define DAG_ETH_ERFLEN 18
+
+#ifndef ERF_TYPE_META
+#define ERF_TYPE_META 27
+#endif
 
 static set<string> used_interfaces;
 
@@ -163,11 +168,13 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 	/* TODO: is this still needed? */
 	SetIdle(false);
 
+	uint8_t *erf_ptr;
 	dag_record_t* r = 0;
 
 	do
 		{
-		r = (dag_record_t*) dag_rx_stream_next_record(fd, 0);
+		erf_ptr = dag_rx_stream_next_record(fd, 0);
+		r = (dag_record_t*) erf_ptr;
 
 		if ( ! r )
 			{
@@ -195,15 +202,60 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 			return false;
 			}
 
-		hdr.len = ntohs(r->wlen);
-		hdr.caplen = ntohs(r->rlen) - DAG_ETH_ERFLEN;
-
 		// Locate start of the Ethernet header.
-		data = (const u_char*) r->rec.eth.dst;
+
+		unsigned int erf_hdr_len = dag_record_size;
+		uint8_t erf_type = r->type & 0x7f;
+
+		if (!dagerf_is_color_type(erf_ptr))
+			{
+			stats.dropped += ntohs(r->lctr);
+			}
+
+		if (erf_type == ERF_TYPE_PAD || erf_type == ERF_TYPE_META)
+			{
+			// Silently skip Provenance and pad records
+			continue;
+			}
 
 		++stats.link;
-		// lctr_sum += ntohs(r->lctr);
-		stats.dropped += ntohs(r->lctr);
+
+		if (dagerf_is_ethernet_type(erf_ptr))
+			{
+			erf_hdr_len += 2; //eth pad
+			}
+		else
+			{
+				Weird(fmt("Unsupported ERF type: %s (%d)", dagerf_type_to_string(r->type, TT_ERROR), erf_type), 0);
+				continue;
+			}
+
+		if (r->type & 0x80)
+			{
+			unsigned int num_ext_hdrs = dagerf_ext_header_count(erf_ptr, ntohs(r->rlen));
+			if (num_ext_hdrs == 0)
+				{
+				// TODO: re-arrange so we can supply pkt argument?
+				Weird("ERF record with invalid extension header stack", 0);
+				continue;
+				}
+
+			erf_hdr_len += num_ext_hdrs;
+			}
+
+		if (dagerf_is_multichannel_type(erf_ptr))
+			erf_hdr_len += 4; //mc_hdr length
+
+		if (erf_hdr_len > ntohs(r->rlen))
+			{
+			Weird("ERF record with insufficient length for header", 0);
+			continue;
+			}
+
+		data = (const u_char*) erf_ptr + erf_hdr_len;
+
+		hdr.len = ntohs(r->wlen);
+		hdr.caplen = ntohs(r->rlen) - erf_hdr_len;
 		}
 	while ( ! ApplyBPFFilter(current_filter, &hdr, data));
 
