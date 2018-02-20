@@ -5,6 +5,7 @@
 extern "C" {
 #include <dagapi.h>
 #include <dagerf.h>
+#include <dagutil.h>
 #include <pcap.h>
 }
 #include <errno.h>
@@ -72,16 +73,9 @@ void PktDagSrc::Open()
 		return;
 		}
 
-	int dag_recordtype = dag_linktype(fd);
-	if ( dag_recordtype < TYPE_MIN || dag_recordtype > TYPE_MAX )
+	if ((dag_get_stream_erf_class_types(fd, stream_num) & (1 << kErfClassEthernet)) == 0)
 		{
-		Error("dag_linktype");
-		return;
-		}
-
-	if ( dag_recordtype != TYPE_ETH )
-		{
-		Error(fmt("unsupported DAG link type 0x%x", dag_recordtype));
+		Error(fmt("unsupported non-Ethernet DAG link type"));
 		return;
 		}
 
@@ -129,7 +123,7 @@ void PktDagSrc::Open()
 		return;
 		}
 
-	fprintf(stderr, "listening on DAG card on %s\n", interface);
+	fprintf(stderr, "listening on DAG card on %s stream %d\n", interface, stream_num);
 
 	stats.link = stats.received = stats.dropped = 0;
 
