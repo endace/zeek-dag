@@ -186,10 +186,10 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 	/* TODO: is this still needed? */
 	SetIdle(false);
 
-	uint8_t *erf_ptr;
+	uint8_t *erf_ptr = 0;
 	dag_record_t* r = 0;
 
-	do
+	while ( true )
 		{
 		erf_ptr = dag_rx_stream_next_record(fd, 0);
 		r = (dag_record_t*) erf_ptr;
@@ -274,25 +274,29 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 		hdr.len = ntohs(r->wlen);
 		hdr.caplen = ntohs(r->rlen) - erf_hdr_len;
+
+		// Timestamp conversion taken from DAG programming manual.
+		unsigned long long lts = r->ts;
+		hdr.ts.tv_sec = lts >> 32;
+		lts = ((lts & 0xffffffffULL) * 1000 * 1000);
+		lts += (lts & 0x80000000ULL) << 1;
+		hdr.ts.tv_usec = lts >> 32;
+		if ( hdr.ts.tv_usec >= 1000000 )
+			{
+			hdr.ts.tv_usec -= 1000000;
+			hdr.ts.tv_sec += 1;
+			}
+
+		// Finally, make sure the packet matches our filter (which may be none)
+		if ( ApplyBPFFilter(current_filter, &hdr, data) )
+			{
+				break;
+			}
+
 		}
-	while ( ! ApplyBPFFilter(current_filter, &hdr, data));
 
 	++stats.received;
-
-	// Timestamp conversion taken from DAG programming manual.
-	unsigned long long lts = r->ts;
-	hdr.ts.tv_sec = lts >> 32;
-	lts = ((lts & 0xffffffffULL) * 1000 * 1000);
-	lts += (lts & 0x80000000ULL) << 1;
-	hdr.ts.tv_usec = lts >> 32;
-	if ( hdr.ts.tv_usec >= 1000000 )
-		{
-		hdr.ts.tv_usec -= 1000000;
-		hdr.ts.tv_sec += 1;
-		}
-
 	pkt->Init(props.link_type, &hdr.ts, hdr.caplen, hdr.len, data);
-
 	//next_timestamp = hdr.ts.tv_sec + double(hdr.ts.tv_usec) / 1e6;
 
 	return true;
