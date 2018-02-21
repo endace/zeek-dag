@@ -30,7 +30,7 @@ PktDagSrc::PktDagSrc(const std::string& path, bool is_live)
 : PktSrc()
 	{
 	if ( ! is_live )
-		Error("pf_ring source does not support offline input");
+		Error("endace dag source does not support offline input");
 
 	current_filter = -1;
 	stream_num = 0;
