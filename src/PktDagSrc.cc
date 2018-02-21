@@ -251,7 +251,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 				continue;
 				}
 
-			erf_hdr_len += num_ext_hdrs;
+			erf_hdr_len += 8 * num_ext_hdrs;
 			}
 
 		if (dagerf_is_multichannel_type(erf_ptr))
