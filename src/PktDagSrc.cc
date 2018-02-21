@@ -93,6 +93,7 @@ void PktDagSrc::Open()
 	if (types <= 0 || i == types)
 		{
 			Error("unsupported non-Ethernet DAG link type");
+			return;
 		}
 
 #if 0
