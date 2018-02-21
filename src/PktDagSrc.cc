@@ -76,26 +76,6 @@ void PktDagSrc::Open()
 		return;
 		}
 
-	types = dag_get_stream_erf_types(fd, stream_num, erfs, ERF_TYPE_MAX);
-	for (i = 0; i < types; i++)
-		{
-			dag_record_t dummy;
-			dummy.type = erfs[i];
-			dummy.rlen = dag_record_size;
-
-			// Annoyingly there isn't a version of this that just takes a type, and dag_get_stream_erf_class_types doesn't currently appear to work with vDAGs.
-			if (dagerf_is_ethernet_type((uint8_t*)&dummy))
-				{
-					break;
-				}
-		}
-
-	if (types <= 0 || i == types)
-		{
-			Error("unsupported non-Ethernet DAG link type");
-			return;
-		}
-
 #if 0
 	// long= is needed to prevent the DAG card from truncating jumbo frames.
 	char* dag_configure_string =
@@ -117,13 +97,38 @@ void PktDagSrc::Open()
 
 	if ( dag_attach_stream(fd, stream_num, 0, EXTRA_WINDOW_SIZE) < 0 )
 		{
-		Error("dag_attach_stream");
+		Error(fmt("dag_attach_stream: %s",
+						strerror(errno)));
+		Close();
 		return;
+		}
+
+	types = dag_get_stream_erf_types(fd, stream_num, erfs, ERF_TYPE_MAX);
+	for (i = 0; i < types; i++)
+		{
+			dag_record_t dummy;
+			dummy.type = erfs[i];
+			dummy.rlen = dag_record_size;
+
+			// Annoyingly there isn't a version of this that just takes a type, and dag_get_stream_erf_class_types doesn't currently appear to work with vDAGs.
+			if (dagerf_is_ethernet_type((uint8_t*)&dummy))
+				{
+					break;
+				}
+		}
+
+	if (types <= 0 || i == types)
+		{
+			Error("unsupported non-Ethernet DAG link type");
+			Close();
+			return;
 		}
 
 	if ( dag_start_stream(fd, stream_num) < 0 )
 		{
-		Error("dag_start_stream");
+		Error(fmt("dag_start_stream: %s",
+						strerror(errno)));
+		Close();
 		return;
 		}
 
@@ -136,11 +141,13 @@ void PktDagSrc::Open()
 	// mindata == 0 for non-blocking.
 	if ( dag_set_stream_poll(fd, stream_num, 0, &maxwait, &poll) < 0 )
 		{
-		Error("dag_set_stream_poll");
+		Error(fmt("dag_set_stream_poll: %s",
+						strerror(errno)));
+		Close();
 		return;
 		}
 
-	fprintf(stderr, "listening on DAG card on %s stream %d\n", interface, stream_num);
+	Info(fmt("Listening on DAG card on %s stream %d\n", interface, stream_num));
 
 	stats.link = stats.received = stats.dropped = 0;
 
@@ -237,7 +244,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 			}
 		else
 			{
-				Weird(fmt("Unsupported ERF type: %s (%d)", dagerf_type_to_string(r->type, TT_ERROR), erf_type), 0);
+				Weird(fmt("ERF record with unsupported type: %s (%d)", dagerf_type_to_string(r->type, TT_ERROR), erf_type), 0);
 				continue;
 			}
 
