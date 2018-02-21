@@ -43,11 +43,6 @@ private:
 	static const unsigned int EXTRA_WINDOW_SIZE = 4 * 1024 * 1024;
 	int stream_num;
 
-	// Unfortunaly the DAG API has some problems with locking streams,
-	// so we do our own checks to ensure we don't use more than one
-	// stream.   In particular, the secondary filter won't work.
-	static int mutex;
-
 	int fd;
 	int current_filter;
 

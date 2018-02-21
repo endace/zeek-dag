@@ -17,14 +17,9 @@ extern "C" {
 
 using namespace iosource::pktsrc;
 
-// Length of ERF Header before Ethernet header.
-#define DAG_ETH_ERFLEN 18
-
 #ifndef ERF_TYPE_META
 #define ERF_TYPE_META 27
 #endif
-
-static set<string> used_interfaces;
 
 PktDagSrc::PktDagSrc(const std::string& path, bool is_live)
 : PktSrc()
@@ -46,21 +41,9 @@ void PktDagSrc::Open()
 	int i = 0;
 
 	dag_parse_name(props.path.c_str(), interface, DAGNAME_BUFSIZE, &stream_num);
-	fd = -1;
-	// TODO: Won't work for streams, not actually set anywhere? */
-	/*
-	if ( used_interfaces.find(interface) != used_interfaces.end() )
-		{
-		Error("DAG interface already in use, can't be used multiple times");
-		return;
-		}
-	*/
-
 
 	// We only support Ethernet.
-	//hdr_size = 14;
 	props.link_type = DLT_EN10MB;
-	//netmask = 0xffffff00;	// XXX does this make sense?
 	props.netmask = NETMASK_UNKNOWN;
 
 	current_filter = -1;
@@ -169,7 +152,6 @@ void PktDagSrc::Close()
 		fd = -1;
 		}
 
-	//used_interfaces.erase(interface);
 	Closed();
 	}
 
@@ -297,7 +279,6 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 	++stats.received;
 	pkt->Init(props.link_type, &hdr.ts, hdr.caplen, hdr.len, data);
-	//next_timestamp = hdr.ts.tv_sec + double(hdr.ts.tv_usec) / 1e6;
 
 	return true;
 	}
