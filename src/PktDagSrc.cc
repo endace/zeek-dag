@@ -41,6 +41,9 @@ PktDagSrc::PktDagSrc(const std::string& path, bool is_live)
 void PktDagSrc::Open()
 	{
 	char interface[DAGNAME_BUFSIZE];
+	uint8_t erfs[ERF_TYPE_MAX];
+	int types = 0;
+	int i = 0;
 
 	dag_parse_name(props.path.c_str(), interface, DAGNAME_BUFSIZE, &stream_num);
 	fd = -1;
@@ -73,10 +76,23 @@ void PktDagSrc::Open()
 		return;
 		}
 
-	if ((dag_get_stream_erf_class_types(fd, stream_num) & (1 << kErfClassEthernet)) == 0)
+	types = dag_get_stream_erf_types(fd, stream_num, erfs, ERF_TYPE_MAX);
+	for (i = 0; i < types; i++)
 		{
-		Error(fmt("unsupported non-Ethernet DAG link type"));
-		return;
+			dag_record_t dummy;
+			dummy.type = erfs[i];
+			dummy.rlen = dag_record_size;
+
+			// Annoyingly there isn't a version of this that just takes a type, and dag_get_stream_erf_class_types doesn't currently appear to work with vDAGs.
+			if (dagerf_is_ethernet_type((uint8_t*)&dummy))
+				{
+					break;
+				}
+		}
+
+	if (types <= 0 || i == types)
+		{
+			Error("unsupported non-Ethernet DAG link type");
 		}
 
 #if 0
