@@ -27,6 +27,7 @@ PktDagSrc::PktDagSrc(const std::string& path, bool is_live)
 	if ( ! is_live )
 		Error("endace dag source does not support offline input");
 
+	fd = -1;
 	current_filter = -1;
 	stream_num = 0;
 	props.path = path;
@@ -46,6 +47,7 @@ void PktDagSrc::Open()
 	props.link_type = DLT_EN10MB;
 	props.netmask = NETMASK_UNKNOWN;
 
+	fd = -1;
 	current_filter = -1;
 
 	fd = dag_open(interface);
