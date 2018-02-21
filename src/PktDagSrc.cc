@@ -57,7 +57,8 @@ void PktDagSrc::Open()
 
 	if ( fd < 0 )
 		{
-		Error("dag_open");
+		Error(fmt("dag_open: %s",
+						strerror(errno)));
 		return;
 		}
 
