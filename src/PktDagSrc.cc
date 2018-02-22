@@ -52,15 +52,18 @@ void PktDagSrc::Open()
 
 	fd = dag_open(interface);
 
-	// XXX Currently, the DAG fd is not selectable :-(.
-	props.selectable_fd = -1;
-
 	if ( fd < 0 )
 		{
 		Error(fmt("dag_open: %s",
 						strerror(errno)));
 		return;
 		}
+
+	// XXX Currently, the DAG fd is not selectable :-(.
+	// However, pretend that it is for now, as select() will always return true as the driver doesn't implement poll.
+	// Otherwise in some cases Bro will never call us again after we go idle.
+	// (e.g. where fd 0 that is added as a hack in PktMgr::GetFds() is not writeable, such as a debugger).
+	props.selectable_fd = fd;
 
 #if 0
 	// long= is needed to prevent the DAG card from truncating jumbo frames.
