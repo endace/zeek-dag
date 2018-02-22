@@ -171,8 +171,6 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 	// we're busy (in fact this is probably even true; otherwise
 	// we shouldn't be using such expensive monitoring hardware!).
 	//idle = false;
-	/* TODO: is this still needed? */
-	SetIdle(false);
 
 	uint8_t *erf_ptr = 0;
 	dag_record_t* r = 0;
@@ -196,7 +194,6 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 			else
 				{ // gone dry
-				SetIdle(true);
 				return false;
 				}
 			}
