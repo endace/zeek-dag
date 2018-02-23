@@ -13,6 +13,7 @@ bro_plugin_cc(src/Plugin.cc)
 bro_plugin_cc(src/PktDagSrc.cc)
 bro_plugin_link_library(${DAG_LIBRARY})
 bro_plugin_bif(src/dag.bif)
+bro_plugin_dist_files(broctl/lb_dag.py)
 bro_plugin_dist_files(README CHANGES COPYING VERSION)
 bro_plugin_end()
 
