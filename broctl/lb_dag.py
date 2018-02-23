@@ -21,7 +21,7 @@ class LBDAG(BroControl.plugin.Plugin):
         app_instance = first_app_instance
         host = None
         for nn in self.nodes():
-            if nn.type != "worker" or nn.lb_method != "dag":
+            if nn.type != "worker" or not nn.interface.startswith("endace::") or not nn.lb_procs:
                 continue
 
             # Reset stream numbers for different hosts
@@ -31,9 +31,8 @@ class LBDAG(BroControl.plugin.Plugin):
 
             useplugin = True
 
-            if nn.interface.startswith("endace::"):
-                # For the case where a user is running dag HLB
-                nn.interface = "%s:%d" % (nn.interface, app_instance*2)
+            # For the case where a user is running dag HLB
+            nn.interface = "%s:%d" % (nn.interface, app_instance*2)
 
             app_instance += 1
 
