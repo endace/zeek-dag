@@ -1,0 +1,72 @@
+
+Endace::DAG
+=================================
+
+This plugin provides native `Endace DAG <https://www.endace.com>` support for Bro.
+
+Bro-pkg Installation
+--------------------
+
+Make sure you have the DAG software installed and then run:
+
+    bro-pkg install endace/bro-dag
+
+Manual Installation
+-------------------
+
+Follow the DAG installation instructions to get its kernel module, drivers and userspace libraries
+installed, then use the following commands to configure and build the plugin.
+
+After building bro from the sources, change to the "bro-dag" directory and run:
+
+    ./configure --bro-dist=<path to bro sources>
+    make && sudo make install
+
+If everything built and installed correctly, you should see this:
+
+    bro -N Endace::DAG
+    Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.1)
+
+Usage
+-----
+
+Once installed, you can use DAG card streams by prefixing them
+with ``endace::`` on the command line. For example, to capture from
+DAG card ``dag1`` stream 0:
+
+    bro -i endace::dag1
+
+To capture from DAG card ``dag1`` stream 2:
+
+    bro -i endace::dag1:2
+
+This plugin does not configure hardware load balancing on the DAG card. Use the DAG
+software tools to configure the card before use. For example to
+configure 2-tuple (src/dst IP) load balancing for 8 workers:
+
+    dagconfig -d1 hash_tuple=2 hash_bins=8
+
+To use it in production with multiple Bro processes, use a configuration 
+similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
+
+    [worker-1]
+    type=worker
+    host=localhost
+    interface=endace::dag1
+    lb_method=custom
+    lb_procs=8
+    pin_cpus=0,1,2,3,4,5,6,7
+
+Where lb_procs is the number of processes for load balancing.
+
+Now start the BroControl shell like:
+
+    broctl
+
+Then start the Bro instances:
+
+    [BroControl] > deploy
+
+Or simply:
+
+    broctl deploy

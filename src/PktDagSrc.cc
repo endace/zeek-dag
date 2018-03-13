@@ -84,7 +84,7 @@ void PktDagSrc::Open()
 	delete [] dag_configure_string;
 #endif
 
-	if ( dag_attach_stream(fd, stream_num, 0, EXTRA_WINDOW_SIZE) < 0 )
+	if ( dag_attach_stream64(fd, stream_num, 0, EXTRA_WINDOW_SIZE) < 0 )
 		{
 		Error(fmt("dag_attach_stream: %s",
 						strerror(errno)));
@@ -128,7 +128,7 @@ void PktDagSrc::Open()
 	poll.tv_usec = 0;
 
 	// mindata == 0 for non-blocking.
-	if ( dag_set_stream_poll(fd, stream_num, 0, &maxwait, &poll) < 0 )
+	if ( dag_set_stream_poll64(fd, stream_num, 0, &maxwait, &poll) < 0 )
 		{
 		Error(fmt("dag_set_stream_poll: %s",
 						strerror(errno)));
