@@ -42,7 +42,7 @@ To capture from DAG card 1, stream 2:
 
 This plugin does not configure hardware load balancing on the DAG card. Use the DAG
 software tools to configure the card before use. For example to
-configure 2-tuple (src/dst IP) load balancing for 8 workers:
+configure 2-tuple (src/dst IP) load balancing for 8 processes:
 
     dagconfig -d1 hash_tuple=2 hash_bins=8
 
