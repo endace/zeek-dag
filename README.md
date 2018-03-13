@@ -2,12 +2,12 @@
 Endace::DAG
 =================================
 
-This plugin provides native `Endace DAG <https://www.endace.com>` support for Bro.
+This plugin provides native [Endace DAG](https://www.endace.com) support for Bro.
 
 Bro-pkg Installation
 --------------------
 
-Make sure you have the DAG software installed and then run:
+Make sure you have the [DAG software package](https://www.endace.com/support) installed and then run:
 
     bro-pkg install endace/bro-dag
 
