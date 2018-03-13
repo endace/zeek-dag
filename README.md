@@ -32,11 +32,11 @@ Usage
 
 Once installed, you can use DAG card streams by prefixing them
 with ``endace::`` on the command line. For example, to capture from
-DAG card ``dag1`` stream 0:
+DAG card ``dag1``:
 
     bro -i endace::dag1
 
-To capture from DAG card ``dag1`` stream 2:
+To capture from DAG card 1, stream 2 ``dag1:2``:
 
     bro -i endace::dag1:2
 
