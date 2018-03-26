@@ -138,7 +138,7 @@ void PktDagSrc::Open()
 
 	Info(fmt("Listening on DAG card on %s stream %d\n", interface, stream_num));
 
-	stats.link = stats.received = stats.dropped = 0;
+	stats.link = stats.received = stats.dropped = stats.bytes_received = 0;
 
 	Opened(props);
 	}
@@ -281,6 +281,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 		}
 
 	++stats.received;
+	stats.bytes_received += hdr.len; /* XXX: wlen, may not be if support non EN10MB DLTs later! */
 	pkt->Init(props.link_type, &hdr.ts, hdr.caplen, hdr.len, data);
 
 	return true;
@@ -307,6 +308,7 @@ void PktDagSrc::Statistics(Stats* s)
 	s->received = stats.received;
 	s->dropped = stats.dropped;
 	s->link = stats.link + stats.dropped;
+	s->bytes_received = stats.bytes_received;
 	}
 
 bool PktDagSrc::PrecompileFilter(int index, const std::string& filter)
@@ -319,7 +321,7 @@ bool PktDagSrc::SetFilter(int index)
 	current_filter = index;
 
 	// Reset counters.
-	stats.received = stats.dropped = stats.link = 0;
+	stats.received = stats.dropped = stats.link = stats.bytes_received = 0;
 
 	return true;
 	}
