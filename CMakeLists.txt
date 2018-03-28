@@ -22,6 +22,16 @@ bro_plugin_end()
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    set(CPACK_PACKAGE_NAME "bro-plugin-dag")
+    set(PACKAGE_NAME_PREFIX ${CPACK_PACKAGE_NAME})
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Bro endace:: packet source and broctl plugin that provides native support for Endace DAG capture cards.")
+    set(CPACK_PACKAGE_VENDOR "Endace")
+    set(CPACK_PACKAGE_CONTACT "Endace support <support@endace.com>")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, bro (>= 2.5)")
+    # Only suggest broctl since some bro packages bundle it in the main bro package
+    set(CPACK_DEBIAN_PACKAGE_SUGGESTS "broctl")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "net")
+    set(CPACK_DEBIAN_HOMEPAGE "https://www.endace.com/")
     # Allows building rpm/deb packages via "make package" in build dir.
     include(ConfigurePackaging)
     ConfigurePackaging(${VERSION})

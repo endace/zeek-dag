@@ -1,0 +1,5 @@
+#Add the bro user to the dag group if there is one
+if getent group dag >/dev/null && getent passwd bro >/dev/null; then
+    usermod -a -G dag bro
+fi
+exit 0
