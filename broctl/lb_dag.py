@@ -1,6 +1,7 @@
 
-# This plugin sets necessary environment variables to run Bro with
-# PF_RING load balancing.
+# This plugin supports Endace DAG card load balancing across multiple consecutive (even) receive streams.
+# Does not currently configure DAG card for steering. See README for useage instructions.
+# Supports broctl.cfg PFRINGFirstAppInstance to specify starting stream number.
 
 import BroControl.plugin
 import BroControl.config
