@@ -6,10 +6,9 @@
 //
 // Caveats:
 //    - No support for hardware-side filtering yet.
-//    - No support for secondary filter path yet.
+//    - No support for snaplen yet.
 //    - No support for other media than Ethernet.
-//    - Mutex should be per interface
-//    - No support for multiple rx streams
+//    - Currently pretends fd is selectable to work around bro limitations
 
 #ifndef PKTDAGSRC_H
 #define PKTDAGSRC_H
