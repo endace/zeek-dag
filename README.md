@@ -59,6 +59,17 @@ similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
 
 Where lb_procs is the number of processes for load balancing.
 
+To use with multiple DAG cards (each using a single stream), use a configuration 
+similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
+
+    [worker-1]
+    type=worker
+    host=localhost
+    lb_method=interfaces
+    lb_interfaces=endace::dag0:0,endace::dag1:0
+    lb_procs=2
+    pin_cpus=0,1
+
 Now start the BroControl shell like:
 
     broctl
