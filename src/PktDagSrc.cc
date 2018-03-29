@@ -1,5 +1,3 @@
-// $Id: PktDagSrc.cc 6909 2009-09-10 19:42:19Z vern $
-//
 // See the file "COPYING" in the main distribution directory for copyright.
 
 extern "C" {

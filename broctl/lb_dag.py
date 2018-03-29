@@ -1,3 +1,4 @@
+# See the file "COPYING" in the main distribution directory for copyright.
 
 # This plugin supports Endace DAG card load balancing across multiple consecutive (even) receive streams.
 # Does not currently configure DAG card for steering. See README for useage instructions.

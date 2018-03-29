@@ -1,10 +1,6 @@
-###
-### This is a BSD-style license. If you're happy with it, just edit
-### the XXX parts below and remove this comment.  Otherwise, put in
-### your own license instead.
-###
-
-Copyright (c) 2015 by <XXX YOU or YOUR ORGANIZATION XXX>
+Copyright (c) 1995-2008, The Regents of the University of California,
+through Lawrence Berkeley National Laboratory. All rights reserved.
+Copyright (c) 2018 by Endace Technology Limited
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -17,7 +13,9 @@ modification, are permitted provided that the following conditions are met:
     the documentation and/or other materials provided with the
     distribution.
 
-(3) Neither the name of <XXX YOU and/or YOUR ORGANIZATION XXX>, nor
+(3) Neither the name of Endace Technology Limited,
+    the University of California, Lawrence Berkeley National Laboratory,
+    U.S. Dept. of Energy, International Computer Science Institute, nor
     the names of contributors may be used to endorse or promote
     products derived from this software without specific prior written
     permission.

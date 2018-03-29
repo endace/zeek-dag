@@ -1,3 +1,4 @@
+// See the file "COPYING" in the main distribution directory for copyright.
 
 #ifndef BRO_PLUGIN_ENDACE_DAG
 #define BRO_PLUGIN_ENDACE_DAG
