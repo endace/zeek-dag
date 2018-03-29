@@ -33,11 +33,14 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n ${CPACK_PACKAGE_DESCRIPTION}")
     set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, bro (>= 2.5)")
+    set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, bro >= 2.5")
     # Only suggest broctl since some bro packages bundle it in the main bro package
     set(CPACK_DEBIAN_PACKAGE_SUGGESTS "broctl")
     set(CPACK_DEBIAN_PACKAGE_SECTION "net")
+    set(CPACK_RPM_PACKAGE_GROUP "Productivity/Networking/Diagnostic")
     set(CPACK_DEBIAN_HOMEPAGE "https://www.endace.com/")
     # Allows building rpm/deb packages via "make package" in build dir.
+    # TODO: The automatic RPM package needs work, using it is not recommended.
     include(ConfigurePackaging)
     ConfigurePackaging(${VERSION})
 endif ()
