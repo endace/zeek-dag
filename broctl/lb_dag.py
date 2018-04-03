@@ -23,7 +23,7 @@ class LBDAG(BroControl.plugin.Plugin):
         app_instance = first_app_instance
         host = None
         for nn in self.nodes():
-            if nn.type != "worker" or not nn.interface.startswith("endace::") or not nn.lb_procs:
+            if nn.type != "worker" or not nn.interface.startswith("endace::") or not nn.lb_procs or nn.lb_method != "custom":
                 continue
 
             # Reset stream numbers for different hosts
