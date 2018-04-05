@@ -258,6 +258,10 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 		hdr.len = ntohs(r->wlen);
 		hdr.caplen = ntohs(r->rlen) - erf_hdr_len;
 
+		// Records have trailing padding (usually 64-bit alignment), don't include this in caplen
+		if (hdr.len < hdr.caplen)
+			hdr.caplen = hdr.len;
+
 		// Timestamp conversion taken from DAG programming manual.
 		unsigned long long lts = r->ts;
 		hdr.ts.tv_sec = lts >> 32;
