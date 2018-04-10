@@ -104,8 +104,9 @@ void PktDagSrc::Open()
 				}
 		}
 
-	if (types <= 0 || i == types)
+	if ( types > 0 && i == types )
 		{
+			// Don't give an error if we can't find any ERF types (e.g. uninitialized vDAG)
 			Error("unsupported non-Ethernet DAG link type");
 			Close();
 			return;
