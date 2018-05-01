@@ -176,7 +176,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 	while ( true )
 		{
-		erf_ptr = dag_rx_stream_next_record(fd, 0);
+		erf_ptr = dag_rx_stream_next_record(fd, stream_num);
 		r = (dag_record_t*) erf_ptr;
 
 		if ( ! r )
@@ -185,6 +185,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 			if ( errno != EAGAIN )
 				{
+				// FIXME: Bro doesn't actually print this on close, only if net_init fails!
 				Error(fmt("dag_rx_stream_next_record: %s",
 						strerror(errno)));
 				Close();
