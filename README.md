@@ -27,6 +27,10 @@ If everything built and installed correctly, you should see this:
     bro -N Endace::DAG
     Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.1)
 
+Optionally, add the bro user to the dag group (DAG 5.7.1 or newer):
+
+    usermod -a -G dag bro
+
 Usage
 -----
 
@@ -81,3 +85,22 @@ Then start the Bro instances:
 Or simply:
 
     broctl deploy
+
+Packaging
+---------
+### Debian/RPM packages
+Basic binary-only packages can be generated as follows if you have rpmbuild and/or Debian build tools installed.
+Distributing these packages outside a closed environment is not recommended, as bro package installation locations vary.
+
+    ./configure --bro-dist=<path to bro sources after building>
+    cd build/
+    make packages
+
+Packages add the bro user to the dag group if it exists.
+
+### Tarball
+From a *completely clean* (i.e. no untracked files) git checkout:
+
+    ./configure --bro-dist=<path to bro sources>
+    cd build/
+    make package_sources
