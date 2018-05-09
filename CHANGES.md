@@ -1,3 +1,4 @@
+# Release Notes
 ## 0.1.5 - May 1 2018
 - Fix only successfully capturing on stream 0. Error message does not print due to bro bug.
 
@@ -14,7 +15,6 @@
 ## 0.1.1 - Mar 29 2018
 - Add large stream support.
 - Fix bytes_received always being reported as 0.
-- Tarball renamed to bro-plugin-dag-<version>.tar.gz instead of BroPluginDAG-<version>.tar.gz.
 - Basic CPack Debian/RPM packaging by running make packages from build directory. RPM packaging is not recommended.
 - Packages add the bro user to the dag group if there is one.
 
