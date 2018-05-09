@@ -11,6 +11,7 @@ find_package(DAG REQUIRED)
 include_directories(BEFORE ${DAG_INCLUDE_DIR})
 #Hack: copy README.md to README in top level directory to keep ConfigurePackaging happy
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/README COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CHANGES.md ${CMAKE_CURRENT_SOURCE_DIR}/CHANGES COPYONLY)
 bro_plugin_begin(Endace DAG)
 bro_plugin_cc(src/Plugin.cc) 
 bro_plugin_cc(src/PktDagSrc.cc)
