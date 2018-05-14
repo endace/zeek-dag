@@ -61,18 +61,9 @@ similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
     lb_procs=8
     pin_cpus=0,1,2,3,4,5,6,7
 
-Where lb_procs is the number of processes for load balancing.
+Where lb_procs is the number of processes for load balancing. Current DAG card models support up to 32 streams/procs for load balancing in hardware, as well as hardware packet filtering and flexible steering of up to 4 capture ports/interfaces to streams (see DAG documentation).
 
-To use with multiple DAG cards (each using a single stream), use a configuration 
-similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
-
-    [worker-1]
-    type=worker
-    host=localhost
-    lb_method=interfaces
-    lb_interfaces=endace::dag0:0,endace::dag1:0
-    lb_procs=2
-    pin_cpus=0,1
+To use with multiple DAG cards, simply add multiple worker stanzas as above.
 
 Now start the BroControl shell like:
 
