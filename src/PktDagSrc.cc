@@ -48,11 +48,16 @@ void PktDagSrc::Open()
 	fd = -1;
 	current_filter = -1;
 
-	fd = dag_open(interface);
+	if ((dag_ref = dag_config_init(interface)) == NULL) {
+	    Error(fmt("dag_attach_stream: %s",
+						strerror(errno)));
+	    return;
+	}
+	fd = dag_config_get_card_fd(dag_ref);
 
 	if ( fd < 0 )
 		{
-		Error(fmt("dag_open: %s",
+		Error(fmt("dag_config_get_card_fd: %s",
 						strerror(errno)));
 		return;
 		}
@@ -153,7 +158,8 @@ void PktDagSrc::Close()
 		{
 		dag_stop_stream(fd, stream_num);
 		dag_detach_stream(fd, stream_num);
-		dag_close(fd);
+		dag_config_dispose(dag_ref);
+		dag_ref = NULL;
 		fd = -1;
 		}
 

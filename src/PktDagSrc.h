@@ -14,6 +14,7 @@
 extern int snaplen;
 
 #include "iosource/PktSrc.h"
+#include "dag_config_api.h"
 
 namespace iosource {
 namespace pktsrc {
@@ -40,6 +41,7 @@ private:
 	static const unsigned int EXTRA_WINDOW_SIZE = 4 * 1024 * 1024;
 	int stream_num;
 
+	dag_card_ref_t dag_ref;
 	int fd;
 	int current_filter;
 

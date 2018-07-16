@@ -15,7 +15,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CHANGES.md ${CMAKE_CURRENT_SOURCE_DIR
 bro_plugin_begin(Endace DAG)
 bro_plugin_cc(src/Plugin.cc) 
 bro_plugin_cc(src/PktDagSrc.cc)
-bro_plugin_link_library(${DAG_LIBRARY})
+bro_plugin_link_library(${DAG_LIBRARIES})
 bro_plugin_bif(src/dag.bif)
 bro_plugin_dist_files(broctl/lb_dag.py)
 bro_plugin_dist_files(README CHANGES COPYING VERSION)
