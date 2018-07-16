@@ -42,6 +42,8 @@ private:
 	int stream_num;
 
 	dag_card_ref_t dag_ref;
+	dag_component_t dag_root;
+	attr_uuid_t drop_attr;
 	int fd;
 	int current_filter;
 

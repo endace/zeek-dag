@@ -95,6 +95,14 @@ void PktDagSrc::Open()
 		return;
 		}
 
+	/* Try to find Stream Drop attribute */
+	drop_attr = kNullAttributeUuid;
+	dag_root = dag_config_get_root_component(dag_ref);
+	if ( dag_component_get_subcomponent(dag_root, kComponentStreamFeatures, 0) )
+	{
+		drop_attr = dag_config_get_indexed_attribute_uuid(dag_ref, kUint32AttributeStreamDropCount, stream_num/2);
+	}
+
 	types = dag_get_stream_erf_types(fd, stream_num, erfs, ERF_TYPE_MAX);
 	for (i = 0; i < types; i++)
 		{
@@ -216,7 +224,7 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 		unsigned int erf_hdr_len = dag_record_size;
 		uint8_t erf_type = r->type & 0x7f;
 
-		if (!dagerf_is_color_type(erf_ptr))
+		if ((drop_attr == kNullAttributeUuid) && (!dagerf_is_color_type(erf_ptr)))
 			{
 			stats.dropped += ntohs(r->lctr);
 			}
@@ -315,6 +323,19 @@ void PktDagSrc::GetFds(int* read, int* write, int* except)
 
 void PktDagSrc::Statistics(Stats* s)
 	{
+	dag_err_t dag_error;
+
+	if(drop_attr != kNullAttributeUuid) {
+		/* Note this counter is cleared at start of capture and will wrap at UINT_MAX.
+		 * The application is responsible for polling s.dropped frequently enough
+		 * to detect each wrap and integrate total drop with a wider counter */
+		if ((dag_error = dag_config_get_uint32_attribute_ex(dag_ref, drop_attr, &stats.dropped)) != kDagErrNone) {
+			Error(fmt("reading stream drop attribute: %s",
+				  dag_config_strerror(dag_error)));
+			return;
+		}
+	}
+
 	s->received = stats.received;
 	s->dropped = stats.dropped;
 	s->link = stats.link + stats.dropped;
