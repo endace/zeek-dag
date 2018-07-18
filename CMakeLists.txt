@@ -13,7 +13,7 @@ include_directories(BEFORE ${DAG_INCLUDE_DIR})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/README COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CHANGES.md ${CMAKE_CURRENT_SOURCE_DIR}/CHANGES COPYONLY)
 bro_plugin_begin(Endace DAG)
-bro_plugin_cc(src/Plugin.cc) 
+bro_plugin_cc(src/Plugin.cc)
 bro_plugin_cc(src/PktDagSrc.cc)
 bro_plugin_link_library(${DAG_LIBRARIES})
 bro_plugin_bif(src/dag.bif)
@@ -40,6 +40,18 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     set(CPACK_DEBIAN_PACKAGE_SECTION "net")
     set(CPACK_RPM_PACKAGE_GROUP "Productivity/Networking/Diagnostic")
     set(CPACK_DEBIAN_HOMEPAGE "https://www.endace.com/")
+
+    # Work around CMakeRPM blindly including directories owned by other packages which is disallowed by rpm.
+    # ConfigurePackaging overrides CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION, so instead replace the default list.
+    list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST /usr /usr/local /opt)
+    # Exclude each part of the directory tree of bro plugin path, since the bro package owns it (based on what CPackRPM does for install prefix)
+    string(REPLACE "/" ";" _DIR_ELEMS ${BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH})
+    foreach(_ELEM ${_DIR_ELEMS})
+        list(APPEND _DIR_BUILDER_ELEMS "${_ELEM}")
+        string(REPLACE ";" "/" _DIR "${_DIR_BUILDER_ELEMS}")
+        list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST "/${_DIR}")
+    endforeach()
+
     # Allows building rpm/deb packages via "make package" in build dir.
     # TODO: The automatic RPM package needs work, using it is not recommended.
     include(ConfigurePackaging)

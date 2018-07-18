@@ -85,7 +85,7 @@ Distributing these packages outside a closed environment is not recommended, as 
 
     ./configure --bro-dist=<path to bro sources after building>
     cd build/
-    make packages
+    make package
 
 Packages add the bro user to the dag group if it exists.
 
