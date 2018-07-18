@@ -2,6 +2,7 @@
 ## 0.2.0 - July 18 2018
 - Improved accuracy of packets dropped statistics on physical DAG cards.
 - Fix CMake generated RPM package (make package).
+- Fix error message during capture not printing.
 
 ## 0.1.5 - May 1 2018
 - Fix only successfully capturing on stream 0. Error message does not print due to bro bug.

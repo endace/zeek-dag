@@ -199,8 +199,8 @@ bool PktDagSrc::ExtractNextPacket(Packet* pkt)
 
 			if ( errno != EAGAIN )
 				{
-				// FIXME: Bro doesn't actually print this on close, only if net_init fails!
-				Error(fmt("dag_rx_stream_next_record: %s",
+				// FIXME: Bro doesn't print Error() on close, only if net_init fails. Using InternalError() instead.
+				InternalError(fmt("dag_rx_stream_next_record: %s",
 						strerror(errno)));
 				Close();
 				return false;
