@@ -1,4 +1,7 @@
 # Release Notes
+## 0.2.0 - July 18 2018
+- Improved accuracy of packets dropped statistics on physical DAG cards
+
 ## 0.1.5 - May 1 2018
 - Fix only successfully capturing on stream 0. Error message does not print due to bro bug.
 

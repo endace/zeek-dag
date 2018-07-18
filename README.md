@@ -25,7 +25,7 @@ After building bro from the sources, change to the "bro-dag" directory and run:
 If everything built and installed correctly, you should see this:
 
     bro -N Endace::DAG
-    Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.1)
+    Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.2)
 
 Optionally, add the bro user to the dag group (DAG 5.7.1 or newer):
 
