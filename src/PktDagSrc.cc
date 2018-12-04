@@ -324,16 +324,18 @@ void PktDagSrc::GetFds(int* read, int* write, int* except)
 void PktDagSrc::Statistics(Stats* s)
 	{
 	dag_err_t dag_error;
+	uint32_t drops;
 
 	if(drop_attr != kNullAttributeUuid) {
 		/* Note this counter is cleared at start of capture and will wrap at UINT_MAX.
 		 * The application is responsible for polling s.dropped frequently enough
 		 * to detect each wrap and integrate total drop with a wider counter */
-		if ((dag_error = dag_config_get_uint32_attribute_ex(dag_ref, drop_attr, &stats.dropped)) != kDagErrNone) {
+		if ((dag_error = dag_config_get_uint32_attribute_ex(dag_ref, drop_attr, &drops)) != kDagErrNone) {
 			Error(fmt("reading stream drop attribute: %s",
 				  dag_config_strerror(dag_error)));
 			return;
 		}
+		stats.dropped = drops;
 	}
 
 	s->received = stats.received;
