@@ -2,13 +2,14 @@
 Endace::DAG
 =================================
 
-This plugin provides native [Endace DAG](https://www.endace.com) support for Bro.
+This plugin provides native [Endace DAG](https://www.endace.com/dag) packet capture card support for Bro.
 
 Bro-pkg Installation
 --------------------
 
-Make sure you have the [DAG software package](https://www.endace.com/support) installed and then run:
+Ensure you have latest Bro release and bro-pkg installed. Install the latest [DAG software package](https://www.endace.com/support) and then run:
 
+    bro-pkg autoconfig
     bro-pkg install endace/bro-dag
 
 Manual Installation
@@ -25,7 +26,7 @@ After building bro from the sources, change to the "bro-dag" directory and run:
 If everything built and installed correctly, you should see this:
 
     bro -N Endace::DAG
-    Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.2)
+    Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.3)
 
 Optionally, add the bro user to the dag group (DAG 5.7.1 or newer):
 
@@ -46,11 +47,11 @@ To capture from DAG card 1, stream 2:
 
 This plugin does not configure hardware load balancing on the DAG card. Use the DAG
 software tools to configure the card before use. For example to
-configure 2-tuple (src/dst IP) load balancing for 8 processes:
+configure 2-tuple (src/dst IP) load balancing for 8 worker processes:
 
     dagconfig -d1 hash_tuple=2 hash_bins=8
 
-To use it in production with multiple Bro processes, use a configuration 
+To use bro-dag in production with multiple Bro processes, use a configuration 
 similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
 
     [worker-1]
@@ -59,17 +60,18 @@ similar to this in node.cfg (e.g. /usr/local/bro/etc/node.cfg):
     interface=endace::dag1
     lb_method=custom
     lb_procs=8
-    pin_cpus=0,1,2,3,4,5,6,7
+    ## Optionally pin worker threads
+    #pin_cpus=0,1,2,3,4,5,6,7
 
-Where lb_procs is the number of processes for load balancing. Current DAG card models support up to 32 streams/procs for load balancing in hardware, as well as hardware packet filtering and flexible steering of up to 4 capture ports/interfaces to streams (see DAG documentation).
+Where lb_procs is the number of processes for load balancing. Current DAG card models support up to 32 streams/procs for load balancing in hardware, as well as hardware packet filtering and flexible steering of up to 4 capture ports/interfaces to streams (see [DAG documentation](https://www.endace.com/support)).
 
-To use with multiple DAG cards, simply add multiple worker stanzas as above.
+To use with multiple DAG cards, add multiple worker stanzas as above.
 
-Now start the BroControl shell like:
+Now start the BroControl shell:
 
     broctl
 
-Then start the Bro instances:
+And start the Bro instances:
 
     [BroControl] > deploy
 
