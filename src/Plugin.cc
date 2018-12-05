@@ -15,6 +15,6 @@ plugin::Configuration Plugin::Configure()
 	config.name = "Endace::DAG";
 	config.description = "Packet acquisition via Endace DAG capture cards";
 	config.version.major = 0;
-	config.version.minor = 2;
+	config.version.minor = 3;
 	return config;
 	}

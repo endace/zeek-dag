@@ -1,4 +1,8 @@
 # Release Notes
+## 0.3.0 - December 5 2018
+- Bugfix for Bro 2.6 release compatibility
+- Update plugin configure template for Bro 2.6 to support building with minimal bro devel packages
+
 ## 0.2.0 - July 18 2018
 - Improved accuracy of packets dropped statistics on physical DAG cards.
 - Fix CMake generated RPM package (make package).
