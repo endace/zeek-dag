@@ -1,4 +1,9 @@
 # Release Notes
+## 0.3.1 - April 5 2019
+- Update bro-pkg metadata to support building with bro 2.6 devel packages.
+- bro-config must now be in path for bro-pkg installation to work.
+- Improve installation instructions.
+
 ## 0.3.0 - December 5 2018
 - Bugfix for Bro 2.6 release compatibility
 - Update plugin configure template for Bro 2.6 to support building with minimal bro devel packages
