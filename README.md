@@ -4,36 +4,46 @@ Endace::DAG
 
 This plugin provides native [Endace DAG](https://www.endace.com/dag) packet capture card support for Bro.
 
-Bro-pkg Installation
+Installation
 --------------------
 
-Ensure you have latest Bro release and bro-pkg installed. Install the latest [DAG software package](https://www.endace.com/support) and then run:
+Ensure you have the latest [Bro](https://www.zeek.org/download/) release installed.
 
-    bro-pkg autoconfig
+Install the latest [DAG software package](https://www.endace.com/support). Follow the DAG installation instructions to get its kernel module, drivers, userspace libraries and development headers installed, then use the following commands to configure and build the plugin.
+
+Install pre-requisites for building bro-dag:
+
+* Red Hat/CentOS/Fedora:
+    ````
+    yum install cmake make gcc-c++
+    ````
+* Debian/Ubuntu:
+    ````
+    apt-get install build-essential cmake
+    ````
+If your installation of bro runs as a non-root user, add the bro user to the dag group to allow access to DAG cards (DAG 5.7.1 or newer):
+
+    usermod -a -G dag bro
+
+### Installation using bro-pkg
+Ensure you have [bro-pkg]((https://bro-package-manager.readthedocs.io/en/stable/quickstart.html)) installed and that bro-config is in path, then install bro-dag:
+
     bro-pkg install endace/bro-dag
 
-Manual Installation
--------------------
+### Manual Installation
+After building bro from the sources, run:
 
-Follow the DAG installation instructions to get its kernel module, drivers and userspace libraries
-installed, then use the following commands to configure and build the plugin.
-
-After building bro from the sources, change to the "bro-dag" directory and run:
-
+    git clone https://github.com/endace/bro-dag.git
+    cd bro-dag
     ./configure --bro-dist=<path to bro sources>
     make && sudo make install
 
+Usage
+-----
 If everything built and installed correctly, you should see this:
 
     bro -N Endace::DAG
     Endace::DAG - Packet acquisition via Endace DAG capture cards (dynamic, version 0.3)
-
-Optionally, add the bro user to the dag group (DAG 5.7.1 or newer):
-
-    usermod -a -G dag bro
-
-Usage
------
 
 Once installed, you can use DAG card streams by prefixing them
 with ``endace::`` on the command line. For example, to capture from
