@@ -2,6 +2,7 @@
 
 #include "Plugin.h"
 #include "PktDagSrc.h"
+#include "iosource/Component.h"
 
 namespace plugin { namespace Endace_DAG { Plugin plugin; } }
 
