@@ -1,4 +1,8 @@
-#Add the bro user to the dag group if there is one
+#Add the zeek user to the dag group if there is one
+if getent group dag >/dev/null && getent passwd zeek >/dev/null; then
+    usermod -a -G dag zeek
+fi
+
 if getent group dag >/dev/null && getent passwd bro >/dev/null; then
     usermod -a -G dag bro
 fi
