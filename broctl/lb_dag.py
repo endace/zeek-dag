@@ -4,10 +4,14 @@
 # Does not currently configure DAG card for steering. See README for useage instructions.
 # Supports broctl.cfg PFRINGFirstAppInstance to specify starting stream number.
 
-import BroControl.plugin
-import BroControl.config
+try:
+    from ZeekControl import plugin
+    from ZeekControl import config
+except ImportError:
+    from BroControl import plugin
+    from BroControl import config
 
-class LBDAG(BroControl.plugin.Plugin):
+class LBDAG(plugin.Plugin):
     def __init__(self):
         super(LBDAG, self).__init__(apiversion=1)
 
@@ -19,7 +23,7 @@ class LBDAG(BroControl.plugin.Plugin):
 
     def init(self):
         useplugin = False
-        first_app_instance = int(BroControl.config.Config.pfringfirstappinstance)
+        first_app_instance = int(config.Config.pfringfirstappinstance)
         app_instance = first_app_instance
         host = None
         for nn in self.nodes():
