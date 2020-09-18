@@ -1,4 +1,10 @@
 # Release Notes
+## 0.4.0 - September 18 2020
+- Update for compatibility with Zeek 3.2. Further changes will likely be needed for Zeek 4.1.
+- Avoid runtime deprecation warning in zeekctl load balancing plugin.
+- Update installation instructions to Zeek requirements.
+- Rename package to zeek-dag.
+
 ## 0.3.1 - April 5 2019
 - Update bro-pkg metadata to support building with bro 2.6 devel packages.
 - bro-config must now be in path for bro-pkg installation to work.
