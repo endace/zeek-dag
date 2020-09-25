@@ -21,6 +21,7 @@ Usage: $0 [OPTIONS]
   Plugin Options:
     --cmake=PATH               Path to CMake binary
     --zeek-dist=DIR            Path to Zeek source tree
+    --zeek-package-name=STRING Override zeek package name prefix for dependencies e.g. zeek-lts
     --install-root=DIR         Path where to install plugin into
     --with-binpac=DIR          Path to BinPAC installation root
     --with-broker=DIR          Path to Broker installation root
@@ -50,6 +51,7 @@ append_cache_entry () {
 # set defaults
 builddir=build
 zeekdist=""
+zeek_package_name=""
 installroot="default"
 CMakeCacheEntries=""
 
@@ -78,6 +80,10 @@ while [ $# -ne 0 ]; do
 
         --install-root=*)
             installroot=$optarg
+            ;;
+
+        --zeek-package-name=*)
+            zeek_package_name=$optarg
             ;;
 
         --with-binpac=*)
@@ -131,9 +137,11 @@ fi
 
 if [ -z "$zeekdist" ]; then
     if type zeek-config >/dev/null 2>&1; then
-       zeek_config="zeek-config"
+        zeek_config="zeek-config"
+        zeek_name="zeek"
     elif type bro-config >/dev/null 2>&1; then
-       zeek_config="bro-config"
+        zeek_config="bro-config"
+        zeek_name="bro"
     fi
 
     if [ -n "${zeek_config}" ]; then
@@ -181,7 +189,11 @@ if [ -z "$zeekdist" ]; then
         exit 1
     fi
 else
-    if [ ! -e "$zeekdist/zeek-path-dev.in" -a ! -e "$zeekdist/bro-path-dev.in" ]; then
+    if [ -e "$zeekdist/zeek-path-dev.in" ]; then
+        zeek_name="zeek"
+    elif [ -e "$zeekdist/bro-path-dev.in" ]; then
+        zeek_name="bro"
+    else
       echo "$zeekdist does not appear to be a valid Zeek source tree."
       exit 1
     fi
@@ -197,8 +209,15 @@ if [ "$installroot" != "default" ]; then
     append_cache_entry BRO_PLUGIN_INSTALL_ROOT PATH $installroot
 fi
 
+if [ -z "$zeek_package_name" ]; then
+    zeek_package_name="$zeek_name"
+fi
+
+append_cache_entry ZEEK_PACKAGE_NAME STRING $zeek_package_name
+
 echo "Build Directory        : $builddir"
 echo "Zeek Source Directory   : $zeekdist"
+echo "Zeek Package Name Prefix : $zeek_package_name"
 
 mkdir -p $builddir
 cd $builddir

@@ -22,8 +22,10 @@ bro_plugin_end()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
+set(ZEEK_PACKAGE_NAME "zeek" CACHE STRING "Zeek package name prefix for dependencies e.g. zeek-lts")
+
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-    set(CPACK_PACKAGE_NAME "zeek-plugin-dag")
+    set(CPACK_PACKAGE_NAME "${ZEEK_PACKAGE_NAME}-plugin-dag")
     set(PACKAGE_NAME_PREFIX ${CPACK_PACKAGE_NAME})
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Zeek Endace DAG plugin")
     set(CPACK_PACKAGE_DESCRIPTION "Zeek endace:: packet source and zeekctl plugin that provides native support for Endace DAG and EndaceProbe Application Dock capture.")
@@ -32,8 +34,8 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     # Include full description in debian package, not just summary. The leading space on the next line is required.
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n ${CPACK_PACKAGE_DESCRIPTION}")
     set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, zeek (>= 3.0)")
-    set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, zeek >= 3.0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, ${ZEEK_PACKAGE_NAME}-core (>= 3.0) | ${ZEEK_PACKAGE_NAME} (>= 3.0)")
+    set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, ${ZEEK_PACKAGE_NAME} >= 3.0")
     set(CPACK_DEBIAN_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_DEBIAN_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
