@@ -8,7 +8,7 @@ include(BroPlugin)
 
 find_package(DAG REQUIRED)
 
-include_directories(BEFORE ${DAG_INCLUDE_DIR})
+include_directories(${DAG_INCLUDE_DIR})
 #Hack: copy README.md to README in top level directory to keep ConfigurePackaging happy
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/README COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CHANGES.md ${CMAKE_CURRENT_SOURCE_DIR}/CHANGES COPYONLY)
