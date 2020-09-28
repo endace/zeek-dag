@@ -22,6 +22,20 @@ bro_plugin_end()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
+# Pull the Zeek version number out of zeek-config.h, ignoring the release for now since it may not be consistent in packages.
+# Annoyingly Zeek doesn't seem to record this in a cmake variable for plugins.
+if (NOT ZEEK_VERSION)
+    get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+    find_file(ZEEK_CONFIG_H_FILEPATH NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${dirs} NO_DEFAULT_PATH)
+
+    set(ZEEK_VERSION_DEFINE_REGEX "#define[ \t]+(ZEEK_VERSION|VERSION)[ \t]+\"(.+)\"")
+    file(STRINGS "${ZEEK_CONFIG_H_FILEPATH}" ZEEK_VERSION_DEFINE REGEX "${ZEEK_VERSION_DEFINE_REGEX}")
+    string(REGEX REPLACE ${ZEEK_VERSION_DEFINE_REGEX} "\\2" ZEEK_VERSION "${ZEEK_VERSION_DEFINE}")
+endif ()
+string(REGEX REPLACE "([^-]+).*" "\\1" ZEEK_VERSION_PART "${ZEEK_VERSION}")
+
+message(STATUS "Zeek version         : ${ZEEK_VERSION}")
+
 set(ZEEK_PACKAGE_NAME "zeek" CACHE STRING "Zeek package name prefix for dependencies e.g. zeek-lts")
 
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
@@ -34,8 +48,8 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     # Include full description in debian package, not just summary. The leading space on the next line is required.
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n ${CPACK_PACKAGE_DESCRIPTION}")
     set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, ${ZEEK_PACKAGE_NAME}-core (>= 3.0) | ${ZEEK_PACKAGE_NAME} (>= 3.0)")
-    set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, ${ZEEK_PACKAGE_NAME} >= 3.0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, ${ZEEK_PACKAGE_NAME}-core (= ${ZEEK_VERSION_PART}) | ${ZEEK_PACKAGE_NAME} (= ${ZEEK_VERSION_PART})")
+    set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, ${ZEEK_PACKAGE_NAME} = ${ZEEK_VERSION_PART}")
     set(CPACK_DEBIAN_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_DEBIAN_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
