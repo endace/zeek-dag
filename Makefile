@@ -19,6 +19,9 @@ build-it:
 install:
 	( cd $(cmake_build_dir) && make install )
 
+uninstall:
+	( cd $(cmake_build_dir) && make uninstall )
+
 clean:
 	( cd $(cmake_build_dir) && make clean )
 

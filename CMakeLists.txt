@@ -20,6 +20,14 @@ bro_plugin_dist_files(broctl/lb_dag.py)
 bro_plugin_dist_files(README CHANGES COPYING VERSION)
 bro_plugin_end()
 
+if (NOT TARGET uninstall)
+    if (BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH)
+        add_custom_target(uninstall COMMAND
+            ${CMAKE_COMMAND} -E remove_directory "${BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH}/Endace_DAG"
+                COMMENT "Removing: ${BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH}/Endace_DAG")
+    endif ()
+endif ()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
 # Pull the Zeek version number out of zeek-config.h, ignoring the release for now since it may not be consistent in packages.
