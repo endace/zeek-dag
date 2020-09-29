@@ -62,8 +62,19 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_DEBIAN_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_RPM_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "bro-dag, bro-plugin-dag")
-    set(CPACK_RPM_PACKAGE_OBSOLETES "bro-dag, bro-plugin-dag")
+
+    # Build a list of conflicting packages that doesn't include the current package
+    set(conflicts_list zeek-dag zeek-lts-dag bro-dag bro-plugin-dag)
+    list(REMOVE_ITEM conflicts_list ${CPACK_PACKAGE_NAME})
+    # list join requires cmake 3.12
+    string(REPLACE ";" ", " conflicts_string "${conflicts_list}")
+    set(CPACK_DEBIAN_PACKAGE_CONFLICTS ${conflicts_string})
+    set(CPACK_RPM_PACKAGE_CONFLICTS ${conflicts_string})
+    if (NOT ZEEK_PACKAGE_NAME MATCHES "bro")
+        set(CPACK_DEBIAN_PACKAGE_REPLACES "bro-dag, bro-plugin-dag")
+        set(CPACK_RPM_PACKAGE_OBSOLETES "bro-dag, bro-plugin-dag")
+    endif ()
+
     # Only suggest broctl since some bro packages bundle it in the main bro package
     set(CPACK_DEBIAN_PACKAGE_SUGGESTS "zeekctl")
     set(CPACK_DEBIAN_PACKAGE_SECTION "net")
