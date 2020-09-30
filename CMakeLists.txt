@@ -47,7 +47,7 @@ message(STATUS "Zeek version         : ${ZEEK_VERSION}")
 set(ZEEK_PACKAGE_NAME "zeek" CACHE STRING "Zeek package name prefix for dependencies e.g. zeek-lts")
 
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-    set(CPACK_PACKAGE_NAME "${ZEEK_PACKAGE_NAME}-plugin-dag")
+    set(CPACK_PACKAGE_NAME "${ZEEK_PACKAGE_NAME}-dag")
     set(PACKAGE_NAME_PREFIX ${CPACK_PACKAGE_NAME})
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Zeek Endace DAG plugin")
     set(CPACK_PACKAGE_DESCRIPTION "Zeek endace:: packet source and zeekctl plugin that provides native support for Endace DAG and EndaceProbe Application Dock capture.")
