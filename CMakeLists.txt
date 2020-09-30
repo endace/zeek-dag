@@ -75,6 +75,11 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
         set(CPACK_RPM_PACKAGE_OBSOLETES "bro-dag, bro-plugin-dag")
     endif ()
 
+    set(CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}-${ZEEK_VERSION_PART}")
+    set(CPACK_RPM_PACKAGE_VERSION "${VERSION}")
+    set(CPACK_RPM_PACKAGE_RELEASE "${ZEEK_VERSION_PART}")
+    set(CPACK_RPM_PACKAGE_RELEASE_DIST YES)
+
     # Only suggest broctl since some bro packages bundle it in the main bro package
     set(CPACK_DEBIAN_PACKAGE_SUGGESTS "zeekctl")
     set(CPACK_DEBIAN_PACKAGE_SECTION "net")
