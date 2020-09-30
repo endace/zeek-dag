@@ -69,6 +69,13 @@ installed and that ``zeek-config`` is in path, then install zeek-dag:
 
     zkg install endace/zeek-dag
 
+If you have previously installed zeek-dag under the name ``bro-dag`` you will
+need to remove it first using ``zkg remove bro-dag``.
+
+To uninstall use:
+
+    zkg remove zeek-dag
+
 ### Manual Installation
 After building Zeek from the sources, run:
 
@@ -76,6 +83,13 @@ After building Zeek from the sources, run:
     cd zeek-dag
     ./configure --zeek-dist=<path to zeek sources>
     make && sudo make install
+
+If you encounter build errors, run ``make distclean`` and ensure you have an
+appropriate build environment before running configure and make again.
+
+To uninstall use:
+
+    make uninstall
 
 ### Test
 Check the zeek-dag packet source can be loaded successfully. If everything built
