@@ -1,5 +1,5 @@
 # Release Notes
-## 0.4.0 - September 30 2020
+## 0.4 - September 30 2020
 - Update for compatibility with Zeek 3.2. Further changes will likely be needed for Zeek 4.1.
 - Avoid runtime deprecation warning in zeekctl load balancing plugin.
 - Update installation instructions to Zeek requirements.
