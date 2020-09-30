@@ -207,6 +207,8 @@ vary.
 
 Packages add the zeek user to the dag group if it exists.
 
+If Zeek packages are installed as ``zeek-lts`` add the configure option ``--zeek-package-name=zeek-lts``.
+
 ### Tarball
 From a *completely clean* (i.e. no untracked files) git checkout:
 
