@@ -56,10 +56,17 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     # Include full description in debian package, not just summary. The leading space on the next line is required.
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n ${CPACK_PACKAGE_DESCRIPTION}")
     set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
+
+    set(CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}-${ZEEK_VERSION_PART}")
+    set(CPACK_RPM_PACKAGE_VERSION "${VERSION}")
+    set(CPACK_RPM_PACKAGE_RELEASE "${ZEEK_VERSION_PART}")
+    set(CPACK_RPM_PACKAGE_RELEASE_DIST YES)
+
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "dag-base, ${ZEEK_PACKAGE_NAME}-core (= ${ZEEK_VERSION_PART}) | ${ZEEK_PACKAGE_NAME} (= ${ZEEK_VERSION_PART})")
     set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, ${ZEEK_PACKAGE_NAME} = ${ZEEK_VERSION_PART}")
-    set(CPACK_DEBIAN_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
-    set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
+    set(CPACK_DEBIAN_PACKAGE_PROVIDES "zeek-dag (= ${CPACK_DEBIAN_PACKAGE_VERSION}), bro-dag (= ${CPACK_DEBIAN_PACKAGE_VERSION}), bro-plugin-dag (= ${CPACK_DEBIAN_PACKAGE_VERSION})")
+    # Do substitution in spec file so we pick up release dist
+    set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag = %{version}-%{release}, bro-dag = %{version}-%{release}, bro-plugin-dag = %{version}-%{release}")
 
     # Build a list of conflicting packages that doesn't include the current package
     set(conflicts_list zeek-dag zeek-lts-dag bro-dag bro-plugin-dag)
@@ -72,11 +79,6 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
         set(CPACK_DEBIAN_PACKAGE_REPLACES "bro-dag, bro-plugin-dag")
         set(CPACK_RPM_PACKAGE_OBSOLETES "bro-dag, bro-plugin-dag")
     endif ()
-
-    set(CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}-${ZEEK_VERSION_PART}")
-    set(CPACK_RPM_PACKAGE_VERSION "${VERSION}")
-    set(CPACK_RPM_PACKAGE_RELEASE "${ZEEK_VERSION_PART}")
-    set(CPACK_RPM_PACKAGE_RELEASE_DIST YES)
 
     # Only suggest broctl since some bro packages bundle it in the main bro package
     set(CPACK_DEBIAN_PACKAGE_SUGGESTS "zeekctl")
