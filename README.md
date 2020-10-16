@@ -50,9 +50,9 @@ Installation
         yum install centos-release-scl
         ````
 
-   * Install the ``devtoolset-7`` and ``cmake3`` packages:
+   * Install the ``devtoolset-7-toolchain`` and ``cmake3`` packages:
         ````
-        yum install devtoolset-7 cmake3
+        yum install devtoolset-7-toolchain cmake3
         ````
 
    * Enter the devtoolset environment before installing zeek-dag. Subsequent
