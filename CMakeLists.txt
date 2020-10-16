@@ -60,8 +60,6 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     set(CPACK_RPM_PACKAGE_REQUIRES "dag-base, ${ZEEK_PACKAGE_NAME} = ${ZEEK_VERSION_PART}")
     set(CPACK_DEBIAN_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
     set(CPACK_RPM_PACKAGE_PROVIDES "zeek-dag, bro-dag, bro-plugin-dag")
-    set(CPACK_DEBIAN_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
-    set(CPACK_RPM_PACKAGE_CONFLICTS "zeek-dag, bro-dag, bro-plugin-dag")
 
     # Build a list of conflicting packages that doesn't include the current package
     set(conflicts_list zeek-dag zeek-lts-dag bro-dag bro-plugin-dag)
