@@ -12,6 +12,7 @@ extern "C" {
 #include <string>
 
 #include "PktDagSrc.h"
+#include "util.h"
 
 using namespace iosource::pktsrc;
 
@@ -66,7 +67,12 @@ void PktDagSrc::Open()
 	// However, pretend that it is for now, as select() will always return true as the driver doesn't implement poll.
 	// Otherwise in some cases Bro will never call us again after we go idle.
 	// (e.g. where fd 0 that is added as a hack in PktMgr::GetFds() is not writeable, such as a debugger).
+	// Zeek 3.1+ use a new event loop that does not appear to have this problem and does not support this hack.
+#if ZEEK_VERSION_NUMBER >= 30100
+	props.selectable_fd = -1;
+#else
 	props.selectable_fd = fd;
+#endif
 
 #if 0
 	// long= is needed to prevent the DAG card from truncating jumbo frames.

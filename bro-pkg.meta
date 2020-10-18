@@ -1,6 +1,8 @@
 [package]
-description = Packet source plugin that provides native support for Endace DAG capture cards.
-tags = packet source, plugin, broctl plugin, dag, endace
+description = Packet source plugin that provides native support for Endace DAG card and EndaceProbe Application Dock packet capture.
+tags = packet source, zeek plugin, plugin, broctl plugin, zeekctl plugin, dag, endace
+aliases = zeek-dag bro-dag
+depends = bro >=2.6.0
 plugin_dir = build
 build_command = ( ./configure && make )
 test_command = ( cd tests && btest -d )

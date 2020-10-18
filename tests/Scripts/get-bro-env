@@ -6,25 +6,44 @@ base=`dirname $0`
 bro_dist=`cat ${base}/../../build/CMakeCache.txt | grep BRO_DIST | cut -d = -f 2`
 
 if [ -n "${bro_dist}" ]; then
+    if [ -e ${bro_dist}/build/zeek-path-dev ]; then
+        zeek_name="zeek"
+    elif [ -e ${bro_dist}/build/bro-path-dev ]; then
+        zeek_name="bro"
+    else
+        echo "$bro_dist does not appear to be a valid Zeek source tree." >&2
+        exit 1
+    fi
+
     if [ "$1" = "bropath" ]; then
-        ${bro_dist}/build/bro-path-dev
+        ${bro_dist}/build/${zeek_name}-path-dev
+    elif [ "$1" = "zeek_exec" ]; then
+        echo ${zeek_name}
     elif [ "$1" = "bro_plugin_path" ]; then
         ( cd ${base}/../.. && pwd )
     elif [ "$1" = "path" ]; then
-        echo ${bro_dist}/build/src:${bro_dist}/aux/btest:${base}/:${bro_dist}/aux/bro-cut:$PATH
+        echo ${bro_dist}/build/src:${bro_dist}/aux/btest:${bro_dist}/auxil/btest:${base}/:${bro_dist}/aux/${zeek_name}-cut:${bro_dist}/auxil/zeek-cut:$PATH
     else
         echo "usage: `basename $0` <var>" >&2
         exit 1
     fi
 else
     # Use Bro installation for testing. In this case bro-config must be in PATH.
-    if ! which bro-config >/dev/null; then
+    if type zeek-config >/dev/null 2>&1; then
+       zeek_config="zeek-config"
+       zeek_name="zeek"
+    elif type bro-config >/dev/null 2>&1; then
+       zeek_config="bro-config"
+       zeek_name="bro"
+    else
         echo "bro-config not found" >&2
         exit 1
     fi
 
     if [ "$1" = "bropath" ]; then
-        bro-config --bropath
+        ${zeek_config} --${zeek_name}path;
+    elif [ "$1" = "zeek_exec" ]; then
+        echo ${zeek_name}
     elif [ "$1" = "bro_plugin_path" ]; then
         ( cd ${base}/../.. && pwd )
     elif [ "$1" = "path" ]; then
