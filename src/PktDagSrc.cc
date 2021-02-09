@@ -14,7 +14,12 @@ extern "C" {
 #include "PktDagSrc.h"
 #include "util.h"
 
-using namespace iosource::pktsrc;
+#if ZEEK_VERSION_NUMBER >= 40100
+using namespace zeek;
+using zeek::util::fmt;
+#endif
+
+using namespace Endace_DAG;
 
 #ifndef ERF_TYPE_META
 #define ERF_TYPE_META 27

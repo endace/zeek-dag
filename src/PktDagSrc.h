@@ -16,8 +16,11 @@ extern int snaplen;
 #include "iosource/PktSrc.h"
 #include "dag_config_api.h"
 
-namespace iosource {
-namespace pktsrc {
+#if ZEEK_VERSION_NUMBER >= 40100
+using namespace zeek;
+#endif
+
+namespace Endace_DAG {
 
 class PktDagSrc : public iosource::PktSrc {
 public:
@@ -51,7 +54,6 @@ private:
 	Stats stats;
 };
 
-}
 }
 
 #endif

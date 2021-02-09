@@ -4,13 +4,17 @@
 #include "PktDagSrc.h"
 #include "iosource/Component.h"
 
-namespace plugin { namespace Endace_DAG { Plugin plugin; } }
+#if ZEEK_VERSION_NUMBER >= 40100
+using namespace zeek;
+#endif
 
-using namespace plugin::Endace_DAG;
+namespace Endace_DAG { Plugin plugin; }
 
-plugin::Configuration Plugin::Configure()
+using namespace Endace_DAG;
+
+plugin::Configuration Endace_DAG::Plugin::Configure()
 	{
-	AddComponent(new ::iosource::PktSrcComponent("DAGReader", "endace", ::iosource::PktSrcComponent::LIVE, ::iosource::pktsrc::PktDagSrc::InstantiatePktDagSrc));
+	AddComponent(new iosource::PktSrcComponent("DAGReader", "endace", iosource::PktSrcComponent::LIVE, PktDagSrc::InstantiatePktDagSrc));
 
 	plugin::Configuration config;
 	config.name = "Endace::DAG";

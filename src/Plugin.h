@@ -5,10 +5,13 @@
 
 #include <plugin/Plugin.h>
 
-namespace plugin {
+#if ZEEK_VERSION_NUMBER >= 40100
+using namespace zeek;
+#endif
+
 namespace Endace_DAG {
 
-class Plugin : public ::plugin::Plugin
+class Plugin : public plugin::Plugin
 {
 protected:
 	// Overridden from plugin::Plugin.
@@ -17,7 +20,6 @@ protected:
 
 extern Plugin plugin;
 
-}
 }
 
 #endif
