@@ -10,7 +10,7 @@ Installation
 
 ### Prerequisites
 1. Ensure you have a recent [Zeek](https://www.zeek.org/download/) release
-   installed. Bro 2.6 to Zeek 3.2 have been tested. To install zeek-dag you will
+   installed. Bro 2.6 to Zeek 4.0 have been tested. To install zeek-dag you will
    need to have the ``zeek-devel`` or``zeek-core-dev`` package installed, or the
    compiled source directory for Zeek available.
 
@@ -65,7 +65,7 @@ Installation
 ### Installation using zkg/bro-pkg package manager
 Ensure you have
 [zkg](https://docs.zeek.org/projects/package-manager/en/stable/quickstart.html)
-installed and that ``zeek-config`` is in path, then install zeek-dag:
+installed and configured, and that ``zeek-config`` is in PATH, then install zeek-dag:
 
     zkg install endace/zeek-dag
 
