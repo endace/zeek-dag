@@ -30,11 +30,16 @@ endif ()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
+get_property(include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+
+# Work around zeek 4.1+ moving headers
+find_path(ZEEK_INCLUDE_PATH_ZEEK NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${include_dirs} NO_DEFAULT_PATH)
+include_directories(BEFORE ${ZEEK_INCLUDE_PATH_ZEEK})
+
 # Pull the Zeek version number out of zeek-config.h, ignoring the release for now since it may not be consistent in packages.
 # Annoyingly Zeek doesn't seem to record this in a cmake variable for plugins.
 if (NOT ZEEK_VERSION)
-    get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-    find_file(ZEEK_CONFIG_H_FILEPATH NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${dirs} NO_DEFAULT_PATH)
+    find_file(ZEEK_CONFIG_H_FILEPATH NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${include_dirs} NO_DEFAULT_PATH)
 
     set(ZEEK_VERSION_DEFINE_REGEX "#define[ \t]+(ZEEK_VERSION|VERSION)[ \t]+\"(.+)\"")
     file(STRINGS "${ZEEK_CONFIG_H_FILEPATH}" ZEEK_VERSION_DEFINE REGEX "${ZEEK_VERSION_DEFINE_REGEX}")
