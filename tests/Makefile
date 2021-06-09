@@ -1,3 +1,3 @@
 
 test:
-	@btest
+	@btest -d
