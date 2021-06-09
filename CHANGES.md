@@ -1,12 +1,12 @@
 # Release Notes
-## 0.4 - February 11 2021
+## 0.4 - June 10 2021
 - Update for compatibility with Zeek 3.2 and 4.0, with preliminary support for 4.1+.
-- Rename to zeek-dag.
-- Avoid runtime deprecation warning in zeekctl load balancing plugin.
+- Rename to zeek-dag. You should remove the old bro-dag version of the plugin before upgrading.
 - Update installation instructions to Zeek requirements.
 - Add support for multiple vDAG with single stream based load balancing via new zeekctl node.cfg option ``lb_dag_method=card``. It is also now possible to set the starting card or stream number on the interface line e.g. ``interface=endace::dag1:2``. Support for setting the start stream using PFRINGFirstAppIndex is now deprecated and may be removed in a future release.
 - Add ``make uninstall`` target.
 - The CMake generated zeek-dag RPMs now depend on the version of Zeek they were packaged with. Alternative Zeek package names can be specified with ``./configure --zeek-package-name=zeek-lts``.
+- Fix runtime deprecation warning in zeekctl load balancing plugin.
 
 ## 0.3.1 - April 5 2019
 - Update bro-pkg metadata to support building with bro 2.6 devel packages.

@@ -37,8 +37,8 @@ Installation
         apt-get install build-essential cmake
         ````
 
-5. If you are using Zeek 3.1+ with Red Hat/CentOS 7, you will need to use a
-   newer version of the GCC compiler using the ``devtoolset-7`` package as well
+5. If you are using Zeek 3.1 or later with Red Hat/CentOS 7, you will need a
+   newer version of the GCC compiler from the ``devtoolset-7`` package as well
    as the newer ``cmake3`` package:
 
    * Enable the
@@ -115,9 +115,10 @@ Usage with ``zeekctl``
 ----------------------
 
 > *Note:* This plugin does not configure hardware load balancing on the DAG
-> card. Use the DAG software tools to configure the card before use. For example
-> to configure 2-tuple (src/dst IP) load balancing for 8 worker processes on a
-> physical DAG card:
+> card. Use the DAG software tools to configure the card before use.
+>
+> For example to configure 2-tuple (src/dst IP) load balancing for 8 worker
+> processes on physical DAG card dag1:
 >
 > ````
 > dagconfig -d1 hash_tuple=2 hash_bins=8
