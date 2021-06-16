@@ -65,12 +65,14 @@ Installation
 ### Installation using zkg/bro-pkg package manager
 Ensure you have
 [zkg](https://docs.zeek.org/projects/package-manager/en/stable/quickstart.html)
-installed and configured, and that ``zeek-config`` is in PATH, then install zeek-dag:
-
-    zkg install endace/zeek-dag
+installed and configured.
 
 If you have previously installed zeek-dag under the name ``bro-dag`` you will
 need to remove it first using ``zkg remove bro-dag``.
+
+Install zeek-dag using zkg:
+
+    zkg install endace/zeek-dag
 
 To uninstall use:
 
