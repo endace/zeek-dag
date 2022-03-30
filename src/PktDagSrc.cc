@@ -145,13 +145,16 @@ void PktDagSrc::Open()
 		}
 
 	struct timeval maxwait, poll;
-	maxwait.tv_sec = 0;	// arbitrary due to mindata == 0
-	maxwait.tv_usec = 0;
-	poll.tv_sec = 0;	// don't wait until more data arrives.
-	poll.tv_usec = 0;
 
-	// mindata == 0 for non-blocking.
-	if ( dag_set_stream_poll64(fd, stream_num, 0, &maxwait, &poll) < 0 )
+	// Wait for 100 microseconds for data to arrive if none available to reduce high idle CPU load.
+	// Zeek poll sleeping every 10 or 100 dag stream polls isn't sufficient.
+	maxwait.tv_sec = 0;
+	maxwait.tv_usec = 100;
+	poll.tv_sec = 0;
+	poll.tv_usec = 100;
+
+	// mindata == 0 for non-blocking. Using dag_record_size (16) so poll timeout works.
+	if ( dag_set_stream_poll64(fd, stream_num, dag_record_size, &maxwait, &poll) < 0 )
 		{
 		Error(fmt("dag_set_stream_poll: %s",
 						strerror(errno)));
