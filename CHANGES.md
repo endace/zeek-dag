@@ -1,4 +1,7 @@
 # Release Notes
+## 0.5 - March 30 2022
+- Add 100 microsecond stream poll timeout to significantly reduce idle CPU usage when traffic rate is low.
+
 ## 0.4 - June 10 2021
 - Update for compatibility with Zeek 3.2 and 4.0, with preliminary support for 4.1+.
 - Rename to zeek-dag. You should remove the old bro-dag version of the plugin before upgrading.
