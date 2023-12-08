@@ -3,6 +3,6 @@ description = Packet source plugin that provides native support for Endace DAG c
 tags = packet source, zeek plugin, plugin, broctl plugin, zeekctl plugin, dag, endace
 aliases = zeek-dag bro-dag
 depends = bro >=2.6.0
-plugin_dir = build
+plugin_dir = build/Endace_DAG.tgz
 build_command = ( ./configure && make )
 test_command = ( cd tests && btest -d )
