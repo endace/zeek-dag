@@ -152,6 +152,7 @@ if [ -z "$zeekdist" ]; then
             append_cache_entry BRO_CONFIG_PLUGIN_DIR PATH `${zeek_config} --plugin_dir`
             append_cache_entry BRO_CONFIG_CMAKE_DIR PATH `${zeek_config} --cmake_dir`
             append_cache_entry CMAKE_MODULE_PATH PATH `${zeek_config} --cmake_dir`
+            append_cache_entry ZEEK_VERSION `${zeek_config} --version`
 
             build_type=`${zeek_config} --build_type`
 

@@ -6,6 +6,9 @@ project(BroPluginDAG)
 
 include(BroPlugin)
 
+# Zeek 6.0 no longer adds our cmake/ automatically when using ZEEK_DIST
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 find_package(DAG REQUIRED)
 
 include_directories(${DAG_INCLUDE_DIR})
@@ -20,6 +23,12 @@ bro_plugin_dist_files(broctl/lb_dag.py)
 bro_plugin_dist_files(README CHANGES COPYING VERSION)
 bro_plugin_end()
 
+# Zeek 6.0+ no longer sets BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH, only reads it. ZEEK_PLUGIN_DIR is only available here since 6.0.
+# Note that bro_plugin up to Zeek 5.2 depend on BRO_CONFIG variable names when not using ZEEK_DIST.
+if (NOT BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH)
+    set(BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH "${ZEEK_PLUGIN_DIR}")
+endif ()
+
 if (NOT TARGET uninstall)
     if (BRO_PLUGIN_BRO_PLUGIN_INSTALL_PATH)
         add_custom_target(uninstall COMMAND
@@ -30,18 +39,30 @@ endif ()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
-get_property(include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+if (BRO_CONFIG_INCLUDE_DIR)
+    # First try to get the include path from zeek-config
+    string(REPLACE ":" ";" include_dirs "${BRO_CONFIG_INCLUDE_DIR}")
+elseif (TARGET Zeek::DynamicPluginBase)
+    # Pull the include dependency from internal exported zeek target Zeek::DynamicPluginBase used in Zeek 6.0+.
+    # Unlike zeek-config this will point at the correct location if using ZEEK_DIST before zeek is installed.
+    get_target_property(include_dirs Zeek::DynamicPluginBase INTERFACE_INCLUDE_DIRECTORIES)
+else ()
+    # Older versions of zeek bro_plugin helpers populate INCLUDE_DIRECTORIES directly
+    get_property(include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+endif ()
 
 # Work around zeek 4.1+ moving headers
+# Note that EL7 g++ doesn't support __has_include and Zeek 4.0 supports compiling outside devtoolset
+# We don't need to explicitly add the other include paths as bro_plugin helpers deal with this
 find_path(ZEEK_INCLUDE_PATH_ZEEK NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${include_dirs} NO_DEFAULT_PATH)
 include_directories(BEFORE ${ZEEK_INCLUDE_PATH_ZEEK})
 
 # Pull the Zeek version number out of zeek-config.h, ignoring the release for now since it may not be consistent in packages.
 # Annoyingly Zeek doesn't seem to record this in a cmake variable for plugins.
 if (NOT ZEEK_VERSION)
-    find_file(ZEEK_CONFIG_H_FILEPATH NAMES "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${include_dirs} NO_DEFAULT_PATH)
+    find_file(ZEEK_CONFIG_H_FILEPATH NAMES "zeek-version.h" "zeek-config.h" "bro-config.h" PATH_SUFFIXES "zeek" PATHS ${include_dirs} NO_DEFAULT_PATH)
 
-    set(ZEEK_VERSION_DEFINE_REGEX "#define[ \t]+(ZEEK_VERSION|VERSION)[ \t]+\"(.+)\"")
+    set(ZEEK_VERSION_DEFINE_REGEX "#define[ \t]+(ZEEK_VERSION_FULL|VERSION)[ \t]+\"(.+)\"")
     file(STRINGS "${ZEEK_CONFIG_H_FILEPATH}" ZEEK_VERSION_DEFINE REGEX "${ZEEK_VERSION_DEFINE_REGEX}")
     string(REGEX REPLACE ${ZEEK_VERSION_DEFINE_REGEX} "\\2" ZEEK_VERSION "${ZEEK_VERSION_DEFINE}")
 endif ()
