@@ -1,4 +1,9 @@
 # Release Notes
+## 0.6 - December 11 2023
+- Update for compatibility with Zeek 6.0 and 6.1.
+- Fix zkg not installing zeekctl plugin or documentation.
+- Minimum CMake version is now 3.15 as this is enforced by Zeek.
+
 ## 0.5 - March 30 2022
 - Add 100 microsecond stream poll timeout to significantly reduce idle CPU usage when traffic rate is low.
 
